@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Meetups : View all</title>
+</head>
+<body>
+<h2>Meetups : View all!!!</h2>
+<div class="container">
+    <table class="table table-bordered table-striped">
+        <thead>
+        <tr>
+            <td>ID</td>
+            <td>Title</td>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:if="${meetups.empty}">
+            <td colspan="3">
+                No meetups
+            </td>
+        </tr>
+        <tr th:each="meetup : ${meetups}">
+            <td th:text="${meetup.id}">1</td>
+            <td th:text="${meetup.title}">
+                Title
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>
