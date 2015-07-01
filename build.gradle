@@ -11,8 +11,8 @@ buildscript {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
 
         //Added docker plugin
-        //classpath('se.transmode.gradle:gradle-docker:1.2')
-        classpath 'com.bmuschko:gradle-docker-plugin:2.4'
+        classpath('se.transmode.gradle:gradle-docker:1.2')
+//        classpath 'com.bmuschko:gradle-docker-plugin:2.4'
 
     }
 }
@@ -61,42 +61,42 @@ springBoot {
     executable = true
 }
 
-// Docker Specific config
-//group = 'melbjvm'
-//apply plugin: 'docker'
+//Docker Specific config
+group = 'melbjvm'
+apply plugin: 'docker'
+
+task buildDocker(type: Docker, dependsOn: build) {
+    push = true
+    applicationName = jar.baseName
+    dockerfile = file('src/main/docker/Dockerfile')
+    doFirst {
+        copy {
+            from jar
+            into stageDir
+        }
+    }
+}
+
+//apply plugin: 'com.bmuschko.docker-remote-api'
 //
-//task buildDocker(type: Docker, dependsOn: build) {
-//    push = true
-//    applicationName = jar.baseName
-//    dockerfile = file('src/main/docker/Dockerfile')
-//    doFirst {
-//        copy {
-//            from jar
-//            into stageDir
-//        }
-//    }
+//import com.bmuschko.gradle.docker.tasks.image.DockerBuildImage
+//
+//task copyJar(type: Copy) {
+//    dependsOn   'jar'
+//    from        jar
+//    into        'build/docker'
 //}
-
-apply plugin: 'com.bmuschko.docker-remote-api'
-
-import com.bmuschko.gradle.docker.tasks.image.DockerBuildImage
-
-task copyJar(type: Copy) {
-    dependsOn   'jar'
-    from        jar
-    into        'build/docker'
-}
-
-task copyDockerFile(type: Copy) {
-    from        'src/docker/DockerFile'
-    into        'build/docker'
-}
-
-task buildDockerImage(type: DockerBuildImage) {
-    dependsOn   copyJar, copyDockerFile
-    inputDir = file('build/docker')
-    tag = 'melbjvm/demo'
-}
+//
+//task copyDockerFile(type: Copy) {
+//    from        'src/docker/DockerFile'
+//    into        'build/docker'
+//}
+//
+//task buildDockerImage(type: DockerBuildImage) {
+//    dependsOn   copyJar, copyDockerFile
+//    inputDir = file('build/docker')
+//    tag = 'melbjvm/demo'
+//}
 
 
 eclipse {
